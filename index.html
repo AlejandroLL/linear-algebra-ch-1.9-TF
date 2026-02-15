@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linear Algebra True/False Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Added MathJax for LaTeX rendering -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            }
+        };
+    </script>
+    <style>
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen font-sans text-slate-900">
+    <div class="max-w-3xl mx-auto px-4 py-12">
+        <header class="mb-10 text-center">
+            <h1 class="text-3xl font-bold text-slate-800 mb-2">Linear Algebra Quiz</h1>
+            <p class="text-slate-600">Based on Chapter 1.9 Exercises 23–32</p>
+            <div id="progress-bar" class="w-full bg-slate-200 h-2 mt-6 rounded-full overflow-hidden">
+                <div id="progress-fill" class="bg-blue-600 h-full w-0 transition-all duration-300"></div>
+            </div>
+        </header>
+
+        <div id="quiz-container" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-8 min-h-[450px] flex flex-col justify-between">
+            <div id="question-area" class="fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="question-num" class="text-blue-600 font-semibold uppercase tracking-wider text-sm">Question 1 of 10</span>
+                    <span id="score-display" class="text-slate-400 text-sm font-medium"></span>
+                </div>
+                <p id="question-text" class="text-xl leading-relaxed font-medium text-slate-800"></p>
+                
+                <div id="feedback-area" class="hidden mt-6 p-4 rounded-lg border">
+                    <div class="flex items-center gap-2 mb-1">
+                        <p id="feedback-status" class="font-bold"></p>
+                        <span id="correct-answer-badge" class="px-2 py-0.5 rounded text-xs font-bold uppercase"></span>
+                    </div>
+                    <p id="feedback-justification" class="text-slate-600 italic"></p>
+                </div>
+            </div>
+
+            <div id="action-area" class="mt-8 space-y-4">
+                <div id="choice-buttons" class="grid grid-cols-2 gap-4">
+                    <button onclick="checkAnswer(true)" class="py-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition font-bold text-lg">TRUE</button>
+                    <button onclick="checkAnswer(false)" class="py-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition font-bold text-lg">FALSE</button>
+                </div>
+                
+                <div class="flex gap-4">
+                    <button id="prev-btn" onclick="prevQuestion()" class="flex-1 py-4 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 font-bold transition disabled:opacity-50 disabled:cursor-not-allowed">PREVIOUS</button>
+                    <button id="next-btn" onclick="nextQuestion()" class="flex-1 py-4 bg-slate-800 text-white rounded-xl hover:bg-slate-900 font-bold transition hidden">NEXT QUESTION</button>
+                </div>
+                
+                <button id="restart-btn" onclick="resetQuiz()" class="hidden w-full py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold transition">RESTART QUIZ</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                q: "A linear transformation $T: \\mathbb{R}^n \\to \\mathbb{R}^m$ is completely determined by its effect on the columns of the $n \\times n$ identity matrix.",
+                a: true,
+                j: "The columns of the identity matrix are the basis vectors $e_1, \\dots, e_n$. $T(\\mathbf{x}) = x_1 T(\\mathbf{e}_1) + \\dots + x_n T(\\mathbf{e}_n)$."
+            },
+            {
+                q: "A mapping $T: \\mathbb{R}^n \\to \\mathbb{R}^m$ is one-to-one if each vector in $\\mathbb{R}^n$ maps onto a unique vector in $\\mathbb{R}^m$.",
+                a: false,
+                j: "The statement describes the definition of a mapping (function) in general. For a mapping to be one-to-one, each vector in the CODOMAIN must be the image of AT MOST one vector in the domain."
+            },
+            {
+                q: "If $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ rotates vectors about the origin through an angle $\\phi$, then $T$ is a linear transformation.",
+                a: true,
+                j: "Rotation about the origin preserves vector addition and scalar multiplication."
+            },
+            {
+                q: "The columns of the standard matrix for a linear transformation from $\\mathbb{R}^n$ to $\\mathbb{R}^m$ are the images of the columns of the $n \\times n$ identity matrix.",
+                a: true,
+                j: "The standard matrix $A = [T(\\mathbf{e}_1) \\ T(\\mathbf{e}_2) \\ \\dots \\ T(\\mathbf{e}_n)]$."
+            },
+            {
+                q: "When two linear transformations are performed one after another, the combined effect may not always be a linear transformation.",
+                a: false,
+                j: "The composition of two linear transformations is always a linear transformation."
+            },
+            {
+                q: "Not every linear transformation from $\\mathbb{R}^n$ to $\\mathbb{R}^m$ is a matrix transformation.",
+                a: false,
+                j: "Every linear transformation from $\\mathbb{R}^n$ to $\\mathbb{R}^m$ can be represented by a unique $m \\times n$ standard matrix."
+            },
+            {
+                q: "A mapping $T: \\mathbb{R}^n \\to \\mathbb{R}^m$ is onto $\\mathbb{R}^m$ if every vector $\\mathbf{x}$ in $\\mathbb{R}^n$ maps onto some vector in $\\mathbb{R}^m$.",
+                a: false,
+                j: "FALSE. According to the textbook, $T$ is ONTO if each $\\mathbf{b}$ in $\\mathbb{R}^m$ is the image of AT LEAST one $\\mathbf{x}$ in $\\mathbb{R}^n$. example: A transformation from $\\mathbb{R}^3$ to $\\mathbb{R}^2$ represented by $A = [\\mathbf{e}_1 \\ \\mathbf{e}_2 \\ \\mathbf{0}]$ is onto because its columns span $\\mathbb{R}^2$."
+            },
+            {
+                q: "The standard matrix of a linear transformation from $\\mathbb{R}^2$ to $\\mathbb{R}^2$ that reflects points through the horizontal axis, the vertical axis, or the origin has the form $\\begin{bmatrix} a & 0 \\\\ 0 & d \\end{bmatrix}$, where $a$ and $d$ are $\\pm 1$.",
+                a: true,
+                j: "Reflection matrices have values of 1 or -1 on the diagonal and 0 elsewhere."
+            },
+            {
+                q: "If $A$ is a $3 \\times 2$ matrix, then the transformation $\\mathbf{x} \\mapsto A\\mathbf{x}$ cannot be one-to-one.",
+                a: false,
+                j: "FALSE. A $3 \\times 2$ matrix is one-to-one if its columns are linearly independent. Example: $A = \\begin{bmatrix} 1 & 0 \\\\ 0 & 1 \\\\ 0 & 0 \\end{bmatrix}$ is one-to-one because $A\\mathbf{x} = \\mathbf{0}$ has only the trivial solution."
+            },
+            {
+                q: "If $A$ is a $4 \\times 3$ matrix, then the transformation $\\mathbf{x} \\mapsto A\\mathbf{x}$ maps $\\mathbb{R}^3$ onto $\\mathbb{R}^4$.",
+                a: false,
+                j: "FALSE. For $T$ to be onto, $A$ must have a pivot in every row. Since $A$ is $4 \\times 3$, it has at most 3 pivots, meaning there is at least one row without a pivot. Example: $A = \\begin{bmatrix} 1 & 0 & 0 \\\\ 0 & 1 & 0 \\\\ 0 & 0 & 1 \\\\ 0 & 0 & 0 \\end{bmatrix}$ cannot map to any vector $\\mathbf{b}$ where the 4th component is non-zero."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let userAnswers = Array(quizData.length).fill(null);
+
+        function loadQuestion() {
+            const data = quizData[currentQuestion];
+            document.getElementById('question-num').innerText = `Question ${currentQuestion + 1} of ${quizData.length}`;
+            const qEl = document.getElementById('question-text');
+            qEl.innerText = data.q;
+            
+            const prevBtn = document.getElementById('prev-btn');
+            prevBtn.disabled = currentQuestion === 0;
+            prevBtn.classList.toggle('hidden', currentQuestion === quizData.length);
+
+            if (userAnswers[currentQuestion] !== null) {
+                showFeedback(userAnswers[currentQuestion]);
+            } else {
+                document.getElementById('feedback-area').classList.add('hidden');
+                document.getElementById('choice-buttons').classList.remove('hidden');
+                document.getElementById('next-btn').classList.add('hidden');
+            }
+
+            document.getElementById('progress-fill').style.width = `${((currentQuestion) / quizData.length) * 100}%`;
+
+            if (window.MathJax) {
+                MathJax.typesetPromise([qEl]);
+            }
+        }
+
+        function checkAnswer(userChoice) {
+            userAnswers[currentQuestion] = userChoice;
+            let currentScore = 0;
+            userAnswers.forEach((ans, idx) => {
+                if (ans !== null && ans === quizData[idx].a) currentScore++;
+            });
+            score = currentScore;
+            showFeedback(userChoice);
+        }
+
+        function showFeedback(userChoice) {
+            const data = quizData[currentQuestion];
+            const isCorrect = userChoice === data.a;
+
+            document.getElementById('choice-buttons').classList.add('hidden');
+            const feedbackArea = document.getElementById('feedback-area');
+            feedbackArea.classList.remove('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+
+            const status = document.getElementById('feedback-status');
+            const badge = document.getElementById('correct-answer-badge');
+            const justification = document.getElementById('feedback-justification');
+
+            if (isCorrect) {
+                status.innerText = "Correct!";
+                status.className = "text-green-600 font-bold";
+                feedbackArea.className = "mt-6 p-4 rounded-lg border border-green-200 bg-green-50";
+            } else {
+                status.innerText = "Incorrect.";
+                status.className = "text-red-600 font-bold";
+                feedbackArea.className = "mt-6 p-4 rounded-lg border border-red-200 bg-red-50";
+            }
+
+            badge.innerText = data.a ? "Statement is TRUE" : "Statement is FALSE";
+            badge.className = `px-2 py-0.5 rounded text-xs font-bold uppercase ${data.a ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}`;
+            
+            justification.innerText = data.j;
+
+            if (window.MathJax) {
+                MathJax.typesetPromise([justification]);
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('progress-fill').style.width = "100%";
+            document.getElementById('question-num').innerText = "Quiz Complete";
+            document.getElementById('question-text').innerHTML = `You scored <span class="text-blue-600 font-bold">${score} out of ${quizData.length}</span>!`;
+            document.getElementById('feedback-area').classList.add('hidden');
+            document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('prev-btn').classList.add('hidden');
+            document.getElementById('choice-buttons').classList.add('hidden');
+            document.getElementById('restart-btn').classList.remove('hidden');
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            userAnswers = Array(quizData.length).fill(null);
+            document.getElementById('restart-btn').classList.add('hidden');
+            document.getElementById('prev-btn').classList.remove('hidden');
+            loadQuestion();
+        }
+
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>
