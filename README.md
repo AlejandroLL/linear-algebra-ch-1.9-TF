@@ -1,2 +1,2 @@
-# linear-algebra-ch-1.9-TF
-study guide
+# linear-algebra TF study guide
+will attempt to add chapters on a weekly basis following along with the lecture
