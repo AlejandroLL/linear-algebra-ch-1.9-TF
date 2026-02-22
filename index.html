@@ -74,6 +74,19 @@
                         </div>
                     </div>
                 </button>
+
+                <!-- Section 2.3 -->
+                <button onclick="startQuiz('2.3')" class="group p-6 bg-white rounded-2xl border border-slate-200 shadow-sm hover:border-blue-500 hover:shadow-md transition text-left">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-800 group-hover:text-blue-600">Section 2.3</h3>
+                            <p class="text-slate-500">Characterizations of Invertible Matrices (Ex. 11–20)</p>
+                        </div>
+                        <div class="bg-slate-50 p-2 rounded-full group-hover:bg-blue-50">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-slate-400 group-hover:text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="9 5l7 7-7 7" /></svg>
+                        </div>
+                    </div>
+                </button>
             </div>
         </div>
 
@@ -138,7 +151,7 @@
             '2.1': [
                 { q: "If $A$ and $B$ are $2 \\times 2$ with columns $\\mathbf{a}_1, \\mathbf{a}_2$ and $\\mathbf{b}_1, \\mathbf{b}_2$, respectively, then $AB = [\\mathbf{a}_1\\mathbf{b}_1 \\quad \\mathbf{a}_2\\mathbf{b}_2]$. ", a: false, j: "The columns of $AB$ are $A\\mathbf{b}_1$ and $A\\mathbf{b}_2$." },
                 { q: "If $A$ and $B$ are $3 \\times 3$ and $B = [\\mathbf{b}_1 \\quad \\mathbf{b}_2 \\quad \\mathbf{b}_3]$, then $AB = [A\\mathbf{b}_1 + A\\mathbf{b}_2 + A\\mathbf{b}_3]$.", a: false, j: "The expression in brackets denotes a single vector, whereas $AB$ is a $3 \\times 3$ matrix." },
-                { q: "Each column of $AB$ is a linear combination of the columns of $B$ using weights from the corresponding column of $A$.", a: false, j: "Each column of $AB$ is a linear combination of the columns of **$A$** using weights from the corresponding column of **$B$**. <br><br> **Example:** If $A = [\\mathbf{a}_1 \\ \\mathbf{a}_2]$ and $\\mathbf{b}_1 = \\begin{bmatrix} 3 \\\\ 5 \\end{bmatrix}$, then the first column of $AB$ is $A\\mathbf{b}_1 = 3\\mathbf{a}_1 + 5\\mathbf{a}_2$." },
+                { q: "Each column of $AB$ is a linear combination of the columns of $B$ using weights from the corresponding column of $A$.", a: false, j: "Each column of $AB$ is a linear combination of the columns of **$A$** using weights from the corresponding column of **$B$**." },
                 { q: "The second row of $AB$ is the second row of $A$ multiplied on the right by $B$.", a: true, j: "This is a fundamental row-column rule: $(\\text{row}_i A)B = \\text{row}_i(AB)$." },
                 { q: "$AB + AC = A(B + C)$", a: true, j: "This is the Left Distributive Law." },
                 { q: "$A^T + B^T = (A + B)^T$", a: true, j: "The transpose of a sum is the sum of transposes." },
@@ -148,20 +161,28 @@
                 { q: "The transpose of a sum of matrices equals the sum of their transposes.", a: true, j: "Correct: $(A+B)^T = A^T + B^T$." }
             ],
             '2.2': [
-                { q: "In order for a matrix $B$ to be the inverse of $A$, both equations $AB = I$ and $BA = I$ must be true.", a: true, j: "This is the formal definition of an inverse for a square matrix $A$." },
-                { q: "A product of invertible $n \\times n$ matrices is invertible, and the inverse of the product is the product of their inverses in the same order.", a: false, j: "The inverse of a product is the product of the inverses in the **reverse** order: $(AB)^{-1} = B^{-1}A^{-1}$." },
-                { q: "If $A$ and $B$ are $n \\times n$ and invertible, then $A^{-1}B^{-1}$ is the inverse of $AB$.", a: false, j: "False. $(AB)^{-1} = B^{-1}A^{-1}$. $A^{-1}B^{-1}$ is actually the inverse of $BA$." },
+                { q: "In order for a matrix $B$ to be the inverse of $A$, both equations $AB = I$ and $BA = I$ must be true.", a: true, j: "This is the definition of an inverse." },
+                { q: "A product of invertible $n \\times n$ matrices is invertible, and the inverse of the product is the product of their inverses in the same order.", a: false, j: "Order is reversed: $(AB)^{-1} = B^{-1}A^{-1}$." },
+                { q: "If $A$ and $B$ are $n \\times n$ and invertible, then $A^{-1}B^{-1}$ is the inverse of $AB$.", a: false, j: "False. $(AB)^{-1} = B^{-1}A^{-1}$." },
                 { q: "If $A$ is invertible, then the inverse of $A^{-1}$ is $A$ itself.", a: true, j: "Correct: $(A^{-1})^{-1} = A$." },
-                { q: "If $A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ and $ab - cd \\neq 0$, then $A$ is invertible.", a: false, j: "The condition for invertibility of a $2 \\times 2$ matrix is $ad - bc \\neq 0$, not $ab - cd \\neq 0$." },
-                { q: "If $A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ and $ad = bc$, then $A$ is not invertible.", a: true, j: "If $ad = bc$, then the determinant $ad - bc = 0$, which means the matrix is singular (not invertible)." },
-                { 
-                    q: "If $A$ is an invertible $n \\times n$ matrix, then the equation $A\\mathbf{x} = \\mathbf{b}$ is consistent for each $\\mathbf{b}$ in $\\mathbb{R}^n$.", 
-                    a: true, 
-                    j: "True. If $A$ is invertible, the vector $\\mathbf{x} = A^{-1}\\mathbf{b}$ is a solution for *any* $\\mathbf{b}$ in $\\mathbb{R}^n$. <br><br> **Example:** If $A$ is invertible, and we want to solve $A\\mathbf{x} = \\mathbf{b}$, we can always 'reach' $\\mathbf{b}$ by choosing $\\mathbf{x}$ to be $A^{-1}\\mathbf{b}$. Because $A(A^{-1}\\mathbf{b}) = I\\mathbf{b} = \\mathbf{b}$, the equation is guaranteed to be consistent (have a solution)." 
-                },
-                { q: "If $A$ can be row reduced to the identity matrix, then $A$ must be invertible.", a: true, j: "True. While the theorem doesn't explicitly state $A$ is $n \\times n$, the definition of 'row equivalent to $I_n$' implies $A$ must be $n \\times n$ for the dimensions to match. An $n \\times n$ matrix is invertible if and only if it has $n$ pivot positions, which is exactly what happens when it reduces to $I_n$." },
-                { q: "Each elementary matrix is invertible.", a: true, j: "Every elementary row operation can be undone by another elementary row operation of the same type." },
-                { q: "If $A$ is invertible, then the elementary row operations that reduce $A$ to the identity $I_n$ also reduce $A^{-1}$ to $I_n$.", a: false, j: "Row operations that reduce $A$ to $I_n$ would reduce $I_n$ to $A^{-1}$ if applied to the augmented matrix $[A \\ I]$." }
+                { q: "If $A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ and $ab - cd \\neq 0$, then $A$ is invertible.", a: false, j: "Determinant is $ad - bc$." },
+                { q: "If $A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ and $ad = bc$, then $A$ is not invertible.", a: true, j: "Means $\\text{det } A = 0$." },
+                { q: "If $A$ is an invertible $n \\times n$ matrix, then the equation $A\\mathbf{x} = \\mathbf{b}$ is consistent for each $\\mathbf{b}$ in $\\mathbb{R}^n$.", a: true, j: "$\\mathbf{x} = A^{-1}\\mathbf{b}$ is a solution for any $\\mathbf{b}$." },
+                { q: "If $A$ can be row reduced to the identity matrix, then $A$ must be invertible.", a: true, j: "By the Invertible Matrix Theorem, row equivalence to $I$ implies invertibility for square matrices." },
+                { q: "Each elementary matrix is invertible.", a: true, j: "Every elementary row operation is reversible." },
+                { q: "If $A$ is invertible, then the elementary row operations that reduce $A$ to the identity $I_n$ also reduce $A^{-1}$ to $I_n$.", a: false, j: "Reducing $A$ to $I$ corresponds to multiplying by $A^{-1}$. Reducing $A^{-1}$ to $I$ requires multiplying by $A$." }
+            ],
+            '2.3': [
+                { q: "If the equation $A\\mathbf{x} = \\mathbf{0}$ has only the trivial solution, then $A$ is row equivalent to the $n \\times n$ identity matrix.", a: true, j: "Per the Invertible Matrix Theorem (IMT), if $A\\mathbf{x} = \\mathbf{0}$ has only the trivial solution, $A$ has $n$ pivots, meaning it is row equivalent to $I_n$." },
+                { q: "If there is an $n \\times n$ matrix $D$ such that $AD = I$, then there is also an $n \\times n$ matrix $C$ such that $CA = I$.", a: true, j: "If $AD = I$ for a square matrix, $A$ is invertible, which implies it has both a left and right inverse (which must be equal, $C = D = A^{-1}$)." },
+                { q: "If the columns of $A$ span $\\mathbb{R}^n$, then the columns are linearly independent.", a: true, j: "For square matrices, spanning $\\mathbb{R}^n$ implies $n$ pivots, which in turn implies linear independence." },
+                { q: "If the columns of $A$ are linearly independent, then the columns of $A$ span $\\mathbb{R}^n$.", a: true, j: "This is the converse of the previous statement, also true for $n \\times n$ matrices per the IMT." },
+                { q: "If $A$ is an $n \\times n$ matrix, then the equation $A\\mathbf{x} = \\mathbf{b}$ has at least one solution for each $\\mathbf{b}$ in $\\mathbb{R}^n$.", a: false, j: "This is only true IF $A$ is invertible. The question asks if it's always true for *any* $n \\times n$ matrix, which is false if $A$ is singular." },
+                { q: "If the equation $A\\mathbf{x} = \\mathbf{b}$ has at least one solution for each $\\mathbf{b}$ in $\\mathbb{R}^n$, then the solution is unique for each $\\mathbf{b}$.", a: true, j: "If $A\\mathbf{x} = \\mathbf{b}$ has a solution for every $\\mathbf{b}$, $A$ is invertible, and $A^{-1}\\mathbf{b}$ is the *unique* solution." },
+                { q: "If the equation $A\\mathbf{x} = \\mathbf{0}$ has a nontrivial solution, then $A$ has fewer than $n$ pivot positions.", a: true, j: "Nontrivial solutions exist only if there is at least one free variable, meaning there are fewer than $n$ pivots." },
+                { q: "If the linear transformation $\\mathbf{x} \\mapsto A\\mathbf{x}$ maps $\\mathbb{R}^n$ into $\\mathbb{R}^n$, then $A$ has $n$ pivot positions.", a: false, j: "Every $n \\times n$ matrix defines a map from $\\mathbb{R}^n$ to $\\mathbb{R}^n$, but not all of them have $n$ pivots (only the invertible ones do)." },
+                { q: "If $A^T$ is not invertible, then $A$ is not invertible.", a: true, j: "A matrix is invertible if and only if its transpose is invertible." },
+                { q: "If there is a $\\mathbf{b}$ in $\\mathbb{R}^n$ such that the equation $A\\mathbf{x} = \\mathbf{b}$ is inconsistent, then the transformation $\\mathbf{x} \\mapsto A\\mathbf{x}$ is not one-to-one.", a: true, j: "If $A\\mathbf{x} = \\mathbf{b}$ is inconsistent for some $\\mathbf{b}$, then $A$ is not onto, which for square matrices implies it is also not one-to-one." }
             ]
         };
 
@@ -190,9 +211,10 @@
             document.getElementById('prev-btn').classList.remove('hidden');
             
             const titles = { 
-                '1.9': 'Chapter 1.9 Exercises 23–32', 
-                '2.1': 'Chapter 2.1 Exercises 15–24',
-                '2.2': 'Chapter 2.2 Exercises 11–20'
+                '1.9': 'Section 1.9: Matrix Transformations', 
+                '2.1': 'Section 2.1: Matrix Algebra',
+                '2.2': 'Section 2.2: Matrix Inverses',
+                '2.3': 'Section 2.3: Invertible Matrix Theorem'
             };
             document.getElementById('chapter-title').innerText = titles[key];
             
