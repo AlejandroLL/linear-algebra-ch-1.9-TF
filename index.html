@@ -5,61 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Linear Algebra True/False Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- MathJax for LaTeX rendering -->
+    <link rel="stylesheet" href="styles.css">
+    <script src="mathjax-config.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>
-        window.MathJax = {
-            tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']],
-                displayMath: [['$$', '$$'], ['\\[', '\\]']]
-            }
-        };
-    </script>
-    <style>
-        .fade-in { animation: fadeIn 0.4s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
 </head>
 <body class="bg-slate-50 min-h-screen font-sans text-slate-900">
     <div class="max-w-3xl mx-auto px-4 py-12 relative">
-        <!-- Home Button (Top Right) -->
-        <button id="home-btn" onclick="showMenu()" class="hidden absolute top-4 right-4 flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition z-10">
+        <button id="home-btn" class="hidden absolute top-4 right-4 flex items-center gap-2 px-3 py-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-blue-600 hover:border-blue-200 shadow-sm transition z-10">
             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             <span class="text-sm font-semibold">Menu</span>
         </button>
 
-        <!-- Main Menu Section -->
         <div id="main-menu" class="fade-in">
             <header class="mb-12 text-center">
                 <h1 class="text-4xl font-bold text-slate-800 mb-4">Linear Algebra Study Tool</h1>
                 <p class="text-slate-500">Select a section to begin your practice</p>
             </header>
 
-            <div class="grid gap-4">
-                <button onclick="startQuiz('1.9')" class="group p-5 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-blue-500 transition text-left">
-                    <h3 class="font-bold text-slate-800 group-hover:text-blue-600">Section 1.9: Matrix Transformations</h3>
-                </button>
-                <button onclick="startQuiz('2.1')" class="group p-5 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-blue-500 transition text-left">
-                    <h3 class="font-bold text-slate-800 group-hover:text-blue-600">Section 2.1: Matrix Algebra</h3>
-                </button>
-                <button onclick="startQuiz('2.2')" class="group p-5 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-blue-500 transition text-left">
-                    <h3 class="font-bold text-slate-800 group-hover:text-blue-600">Section 2.2: Matrix Inverses</h3>
-                </button>
-                <button onclick="startQuiz('2.3')" class="group p-5 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-blue-500 transition text-left">
-                    <h3 class="font-bold text-slate-800 group-hover:text-blue-600">Section 2.3: Invertible Matrix Theorem</h3>
-                </button>
-                <button onclick="startQuiz('3.1')" class="group p-5 bg-white rounded-xl border border-slate-200 shadow-sm hover:border-blue-500 transition text-left">
-                    <h3 class="font-bold text-slate-800 group-hover:text-blue-600">Section 3.1: Intro to Determinants</h3>
-                </button>
-                <!-- NEW SECTION -->
-                <button onclick="startQuiz('3.2')" class="group p-5 bg-white rounded-xl border border-blue-200 bg-blue-50/30 shadow-sm hover:border-blue-500 transition text-left">
-                    <h3 class="font-bold text-blue-800 group-hover:text-blue-600">Section 3.2: Properties of Determinants</h3>
-                    <p class="text-xs text-blue-600 mt-1 uppercase tracking-wider font-semibold">Exercises 27–34</p>
-                </button>
-            </div>
+            <div id="section-list" class="grid gap-4"></div>
         </div>
 
-        <!-- Quiz Container Section -->
         <div id="quiz-view" class="hidden fade-in">
             <header class="mb-10 text-center">
                 <h1 class="text-3xl font-bold text-slate-800 mb-2">Linear Algebra Quiz</h1>
@@ -73,7 +38,6 @@
                 <div id="question-area" class="fade-in">
                     <div class="flex justify-between items-center mb-4">
                         <span id="question-num" class="text-blue-600 font-semibold uppercase tracking-wider text-sm"></span>
-                        <span id="score-display" class="text-slate-400 text-sm font-medium"></span>
                     </div>
                     <p id="question-text" class="text-xl leading-relaxed font-medium text-slate-800"></p>
                     
@@ -88,230 +52,22 @@
 
                 <div id="action-area" class="mt-8 space-y-4">
                     <div id="choice-buttons" class="grid grid-cols-2 gap-4">
-                        <button onclick="checkAnswer(true)" class="py-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition font-bold text-lg">TRUE</button>
-                        <button onclick="checkAnswer(false)" class="py-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition font-bold text-lg">FALSE</button>
+                        <button id="true-btn" class="py-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition font-bold text-lg">TRUE</button>
+                        <button id="false-btn" class="py-4 rounded-xl border-2 border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition font-bold text-lg">FALSE</button>
                     </div>
                     
                     <div class="flex gap-4">
-                        <button id="prev-btn" onclick="prevQuestion()" class="flex-1 py-4 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 font-bold transition disabled:opacity-50 disabled:cursor-not-allowed">PREVIOUS</button>
-                        <button id="next-btn" onclick="nextQuestion()" class="flex-1 py-4 bg-slate-800 text-white rounded-xl hover:bg-slate-900 font-bold transition hidden">NEXT QUESTION</button>
+                        <button id="prev-btn" class="flex-1 py-4 bg-slate-100 text-slate-600 rounded-xl hover:bg-slate-200 font-bold transition disabled:opacity-50 disabled:cursor-not-allowed">PREVIOUS</button>
+                        <button id="next-btn" class="flex-1 py-4 bg-slate-800 text-white rounded-xl hover:bg-slate-900 font-bold transition hidden">NEXT QUESTION</button>
                     </div>
                     
-                    <button id="restart-btn" onclick="resetQuiz()" class="hidden w-full py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold transition">RESTART QUIZ</button>
+                    <button id="restart-btn" class="hidden w-full py-4 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold transition">RESTART QUIZ</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        const allQuizzes = {
-            '1.9': [
-                { q: "A linear transformation $T: \\mathbb{R}^n \\to \\mathbb{R}^m$ is completely determined by its effect on the columns of the $n \\times n$ identity matrix.", a: true, j: "The columns of the identity matrix are the basis vectors $\\mathbf{e}_1, \\dots, \\mathbf{e}_n$. $T(\\mathbf{x}) = x_1 T(\\mathbf{e}_1) + \\dots + x_n T(\\mathbf{e}_n)$." },
-                { q: "A mapping $T: \\mathbb{R}^n \\to \\mathbb{R}^m$ is one-to-one if each vector in $\\mathbb{R}^n$ maps onto a unique vector in $\\mathbb{R}^m$.", a: false, j: "For a mapping to be one-to-one, each vector in the CODOMAIN must be the image of AT MOST one vector in the domain." },
-                { q: "If $T: \\mathbb{R}^2 \\to \\mathbb{R}^2$ rotates vectors about the origin through an angle $\\phi$, then $T$ is a linear transformation.", a: true, j: "Rotation about the origin preserves vector addition and scalar multiplication." },
-                { q: "The columns of the standard matrix for a linear transformation from $\\mathbb{R}^n$ to $\\mathbb{R}^m$ are the images of the columns of the $n \\times n$ identity matrix.", a: true, j: "The standard matrix $A = [T(\\mathbf{e}_1) \\ T(\\mathbf{e}_2) \\ \\dots \\ T(\\mathbf{e}_n)]$." },
-                { q: "When two linear transformations are performed one after another, the combined effect may not always be a linear transformation.", a: false, j: "The composition of two linear transformations is always a linear transformation." },
-                { q: "Not every linear transformation from $\\mathbb{R}^n$ to $\\mathbb{R}^m$ is a matrix transformation.", a: false, j: "Every linear transformation from $\\mathbb{R}^n$ to $\\mathbb{R}^m$ can be represented by a unique $m \\times n$ standard matrix." },
-                { q: "A mapping $T: \\mathbb{R}^n \\to \\mathbb{R}^m$ is onto $\\mathbb{R}^m$ if every vector $\\mathbf{x}$ in $\\mathbb{R}^n$ maps onto some vector in $\\mathbb{R}^m$.", a: false, j: "$T$ is ONTO if each $\\mathbf{b}$ in $\\mathbb{R}^m$ is the image of AT LEAST one $\\mathbf{x}$ in $\\mathbb{R}^n$." },
-                { q: "The standard matrix of a linear transformation from $\\mathbb{R}^2$ to $\\mathbb{R}^2$ that reflects points through the horizontal axis, the vertical axis, or the origin has the form $\\begin{bmatrix} a & 0 \\\\ 0 & d \\end{bmatrix}$, where $a$ and $d$ are $\\pm 1$.", a: true, j: "Reflection matrices have values of 1 or -1 on the diagonal and 0 elsewhere." },
-                { q: "If $A$ is a $3 \\times 2$ matrix, then the transformation $\\mathbf{x} \\mapsto A\\mathbf{x}$ cannot be one-to-one.", a: false, j: "A $3 \\times 2$ matrix is one-to-one if its columns are linearly independent." },
-                { q: "If $A$ is a $4 \\times 3$ matrix, then the transformation $\\mathbf{x} \\mapsto A\\mathbf{x}$ maps $\\mathbb{R}^3$ onto $\\mathbb{R}^4$.", a: false, j: "Since $A$ is $4 \\times 3$, it has at most 3 pivots, meaning there is at least one row without a pivot. Thus it cannot be onto $\\mathbb{R}^4$." }
-            ],
-            '2.1': [
-                { q: "If $A$ and $B$ are $2 \\times 2$ with columns $\\mathbf{a}_1, \\mathbf{a}_2$ and $\\mathbf{b}_1, \\mathbf{b}_2$, respectively, then $AB = [\\mathbf{a}_1\\mathbf{b}_1 \\quad \\mathbf{a}_2\\mathbf{b}_2]$. ", a: false, j: "The columns of $AB$ are $A\\mathbf{b}_1$ and $A\\mathbf{b}_2$." },
-                { q: "If $A$ and $B$ are $3 \\times 3$ and $B = [\\mathbf{b}_1 \\quad \\mathbf{b}_2 \\quad \\mathbf{b}_3]$, then $AB = [A\\mathbf{b}_1 + A\\mathbf{b}_2 + A\\mathbf{b}_3]$.", a: false, j: "The expression in brackets denotes a single vector, whereas $AB$ is a $3 \\times 3$ matrix." },
-                { q: "Each column of $AB$ is a linear combination of the columns of $B$ using weights from the corresponding column of $A$.", a: false, j: "Each column of $AB$ is a linear combination of the columns of **$A$** using weights from the corresponding column of **$B$**." },
-                { q: "The second row of $AB$ is the second row of $A$ multiplied on the right by $B$.", a: true, j: "This is a fundamental row-column rule: $(\\text{row}_i A)B = \\text{row}_i(AB)$." },
-                { q: "$AB + AC = A(B + C)$", a: true, j: "This is the Left Distributive Law." },
-                { q: "$A^T + B^T = (A + B)^T$", a: true, j: "The transpose of a sum is the sum of transposes." },
-                { q: "$(AB)C = (AC)B$", a: false, j: "Matrix multiplication is associative $(AB)C = A(BC)$, but not commutative." },
-                { q: "$(AB)^T = A^T B^T$", a: false, j: "The property is $(AB)^T = B^T A^T$." },
-                { q: "The transpose of a product of matrices equals the product of their transposes in the same order.", a: false, j: "The order must be reversed: $(AB)^T = B^T A^T$." },
-                { q: "The transpose of a sum of matrices equals the sum of their transposes.", a: true, j: "Correct: $(A+B)^T = A^T + B^T$." }
-            ],
-            '2.2': [
-                { q: "In order for a matrix $B$ to be the inverse of $A$, both equations $AB = I$ and $BA = I$ must be true.", a: true, j: "This is the definition of an inverse." },
-                { q: "A product of invertible $n \\times n$ matrices is invertible, and the inverse of the product is the product of their inverses in the same order.", a: false, j: "Order is reversed: $(AB)^{-1} = B^{-1}A^{-1}$." },
-                { q: "If $A$ and $B$ are $n \\times n$ and invertible, then $A^{-1}B^{-1}$ is the inverse of $AB$.", a: false, j: "False. $(AB)^{-1} = B^{-1}A^{-1}$." },
-                { q: "If $A$ is invertible, then the inverse of $A^{-1}$ is $A$ itself.", a: true, j: "Correct: $(A^{-1})^{-1} = A$." },
-                { q: "If $A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ and $ab - cd \\neq 0$, then $A$ is invertible.", a: false, j: "Determinant is $ad - bc$." },
-                { q: "If $A = \\begin{bmatrix} a & b \\\\ c & d \\end{bmatrix}$ and $ad = bc$, then $A$ is not invertible.", a: true, j: "Means $\\text{det } A = 0$." },
-                { q: "If $A$ is an invertible $n \\times n$ matrix, then the equation $A\\mathbf{x} = \\mathbf{b}$ is consistent for each $\\mathbf{b}$ in $\\mathbb{R}^n$.", a: true, j: "$\\mathbf{x} = A^{-1}\\mathbf{b}$ is a solution for any $\\mathbf{b}$." },
-                { q: "If $A$ can be row reduced to the identity matrix, then $A$ must be invertible.", a: true, j: "By the IMT, row equivalence to $I$ implies invertibility for square matrices." },
-                { q: "Each elementary matrix is invertible.", a: true, j: "Every elementary row operation is reversible." },
-                { q: "If $A$ is invertible, then the elementary row operations that reduce $A$ to the identity $I_n$ also reduce $A^{-1}$ to $I_n$.", a: false, j: "Reducing $A$ to $I$ corresponds to multiplying by $A^{-1}$." }
-            ],
-            '2.3': [
-                { q: "If the equation $A\\mathbf{x} = \\mathbf{0}$ has only the trivial solution, then $A$ is row equivalent to the $n \\times n$ identity matrix.", a: true, j: "IMT: trivial solution $\\iff$ $n$ pivots $\\iff$ row equivalent to $I_n$." },
-                { q: "If there is an $n \\times n$ matrix $D$ such that $AD = I$, then there is also an $n \\times n$ matrix $C$ such that $CA = I$.", a: true, j: "A square matrix with a right inverse is invertible and thus has a left inverse." },
-                { q: "If the columns of $A$ span $\\mathbb{R}^n$, then the columns are linearly independent.", a: true, j: "For $n \\times n$ matrices, spanning implies linear independence." },
-                { q: "If the columns of $A$ are linearly independent, then the columns of $A$ span $\\mathbb{R}^n$.", a: true, j: "IMT: linearly independent columns $\\iff$ columns span $\\mathbb{R}^n$ (for $n \\times n$)." },
-                { q: "If $A$ is an $n \\times n$ matrix, then the equation $A\\mathbf{x} = \\mathbf{b}$ has at least one solution for each $\\mathbf{b}$ in $\\mathbb{R}^n$.", a: false, j: "False if $A$ is not invertible (singular)." },
-                { q: "If the equation $A\\mathbf{x} = \\mathbf{b}$ has at least one solution for each $\\mathbf{b}$ in $\\mathbb{R}^n$, then the solution is unique for each $\\mathbf{b}$.", a: true, j: "Existence of solution for every $\\mathbf{b}$ $\\implies$ invertibility $\\implies$ uniqueness." },
-                { q: "If the equation $A\\mathbf{x} = \\mathbf{0}$ has a nontrivial solution, then $A$ has fewer than $n$ pivot positions.", a: true, j: "Nontrivial solution $\\implies$ free variable $\\implies < n$ pivots." },
-                { q: "If the linear transformation $\\mathbf{x} \\mapsto A\\mathbf{x}$ maps $\\mathbb{R}^n$ into $\\mathbb{R}^n$, then $A$ has $n$ pivot positions.", a: false, j: "Mapping *into* $\\mathbb{R}^n$ is just the definition of the map; it doesn't guarantee invertibility/full pivots." },
-                { q: "If $A^T$ is not invertible, then $A$ is not invertible.", a: true, j: "$A$ is invertible iff $A^T$ is invertible." },
-                { q: "If there is a $\\mathbf{b}$ in $\\mathbb{R}^n$ such that the equation $A\\mathbf{x} = \\mathbf{b}$ is inconsistent, then the transformation $\\mathbf{x} \\mapsto A\\mathbf{x}$ is not one-to-one.", a: true, j: "Inconsistent for some $\\mathbf{b}$ $\\implies$ not onto $\\implies$ not invertible $\\implies$ not one-to-one." }
-            ],
-            '3.1': [
-                { q: "An $n \\times n$ determinant is defined by determinants of $(n-1) \\times (n-1)$ submatrices.", a: true, j: "This is the inductive/recursive definition of the determinant using cofactor expansion." },
-                { q: "The $(i, j)$-cofactor of a matrix $A$ is the matrix $A_{ij}$ obtained by deleting from $A$ its $i$th row and $j$th column.", a: false, j: "The matrix $A_{ij}$ is the **minor**. The cofactor $C_{ij}$ is a **scalar** defined as $(-1)^{i+j} \\det A_{ij}$." },
-                { q: "The cofactor expansion of $\\det A$ down a column is equal to the cofactor expansion along a row.", a: true, j: "Expanding along any row or column gives the same result. For example, in $\\begin{bmatrix} 1 & 2 \\\\ 3 & 4 \\end{bmatrix}$, Row 1 expansion gives $1(4) - 2(3) = -2$, and Col 1 expansion gives $1(4) - 3(2) = -2$." },
-                { q: "The determinant of a triangular matrix is the sum of the entries on the main diagonal.", a: false, j: "The determinant of a triangular matrix is the **product** of the entries on the main diagonal." }
-            ],
-            '3.2': [
-                { q: "A row replacement operation does not affect the determinant of a matrix.", a: true, j: "Theorem: If a multiple of one row of $A$ is added to another row to produce $B$, then $\\det B = \\det A$." },
-                { q: "If $\\det A$ is zero, then two rows or two columns are the same, or a row or a column is zero.", a: false, j: "While these conditions lead to a zero determinant, they are not the *only* way. For example, a row could be a linear combination of other rows without being identical to any one of them." },
-                { q: "If the columns of $A$ are linearly dependent, then $\\det A = 0$.", a: true, j: "A matrix is invertible if and only if $\\det A \\neq 0$. Linearly dependent columns mean the matrix is not invertible, so $\\det A = 0$." },
-                { q: "The determinant of $A$ is the product of the diagonal entries in $A$.", a: false, j: "This is only true if $A$ is a **triangular** matrix. For a general matrix, it is false." },
-                { q: "If three row interchanges are made in succession, then the new determinant equals the old determinant.", a: false, j: "Each interchange multiplies the determinant by $-1$. Three interchanges results in $(-1)^3 = -1$, so the new determinant is the negative of the old one." },
-                { q: "The determinant of $A$ is the product of the pivots in any echelon form $U$ of $A$, multiplied by $(-1)^r$, where $r$ is the number of row interchanges made during row reduction from $A$ to $U$.", a: true, j: "Since row replacements don't change the determinant and interchanges only flip the sign, $\\det A = (-1)^r \\det U$. For echelon form $U$, the determinant is the product of its diagonal entries (pivots)." },
-                { q: "$\\det(A + B) = \\det A + \\det B$", a: false, j: "The determinant is NOT a linear operator with respect to matrix addition. Generally, $\\det(A+B) \\neq \\det A + \\det B$." },
-                { q: "$\\det A^{-1} = (-1) \\det A$.", a: false, j: "The correct property is $\\det A^{-1} = 1 / \\det A$." }
-            ]
-        };
-
-        let activeQuizKey = null;
-        let currentQuestion = 0;
-        let score = 0;
-        let userAnswers = [];
-
-        function showMenu() {
-            document.getElementById('main-menu').classList.remove('hidden');
-            document.getElementById('quiz-view').classList.add('hidden');
-            document.getElementById('home-btn').classList.add('hidden');
-            activeQuizKey = null;
-        }
-
-        function startQuiz(key) {
-            activeQuizKey = key;
-            currentQuestion = 0;
-            score = 0;
-            userAnswers = Array(allQuizzes[key].length).fill(null);
-            
-            document.getElementById('main-menu').classList.add('hidden');
-            document.getElementById('quiz-view').classList.remove('hidden');
-            document.getElementById('home-btn').classList.remove('hidden');
-            document.getElementById('restart-btn').classList.add('hidden');
-            document.getElementById('prev-btn').classList.remove('hidden');
-            
-            const titles = { 
-                '1.9': 'Section 1.9: Matrix Transformations', 
-                '2.1': 'Section 2.1: Matrix Algebra',
-                '2.2': 'Section 2.2: Matrix Inverses',
-                '2.3': 'Section 2.3: Invertible Matrix Theorem',
-                '3.1': 'Section 3.1: Intro to Determinants',
-                '3.2': 'Section 3.2: Properties of Determinants'
-            };
-            document.getElementById('chapter-title').innerText = titles[key];
-            
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            const quizData = allQuizzes[activeQuizKey];
-            const data = quizData[currentQuestion];
-            document.getElementById('question-num').innerText = `Question ${currentQuestion + 1} of ${quizData.length}`;
-            const qEl = document.getElementById('question-text');
-            qEl.innerHTML = data.q;
-            
-            const prevBtn = document.getElementById('prev-btn');
-            prevBtn.disabled = currentQuestion === 0;
-
-            if (userAnswers[currentQuestion] !== null) {
-                showFeedback(userAnswers[currentQuestion]);
-            } else {
-                document.getElementById('feedback-area').classList.add('hidden');
-                document.getElementById('choice-buttons').classList.remove('hidden');
-                document.getElementById('next-btn').classList.add('hidden');
-            }
-
-            document.getElementById('progress-fill').style.width = `${((currentQuestion) / quizData.length) * 100}%`;
-
-            if (window.MathJax) {
-                MathJax.typesetPromise([qEl]);
-            }
-        }
-
-        function checkAnswer(userChoice) {
-            const quizData = allQuizzes[activeQuizKey];
-            userAnswers[currentQuestion] = userChoice;
-            let currentScore = 0;
-            userAnswers.forEach((ans, idx) => {
-                if (ans !== null && ans === quizData[idx].a) currentScore++;
-            });
-            score = currentScore;
-            showFeedback(userChoice);
-        }
-
-        function showFeedback(userChoice) {
-            const quizData = allQuizzes[activeQuizKey];
-            const data = quizData[currentQuestion];
-            const isCorrect = userChoice === data.a;
-
-            document.getElementById('choice-buttons').classList.add('hidden');
-            const feedbackArea = document.getElementById('feedback-area');
-            feedbackArea.classList.remove('hidden');
-            document.getElementById('next-btn').classList.remove('hidden');
-
-            const status = document.getElementById('feedback-status');
-            const badge = document.getElementById('correct-answer-badge');
-            const justification = document.getElementById('feedback-justification');
-
-            if (isCorrect) {
-                status.innerText = "Correct!";
-                status.className = "text-green-600 font-bold";
-                feedbackArea.className = "mt-6 p-4 rounded-lg border border-green-200 bg-green-50";
-            } else {
-                status.innerText = "Incorrect.";
-                status.className = "text-red-600 font-bold";
-                feedbackArea.className = "mt-6 p-4 rounded-lg border border-red-200 bg-red-50";
-            }
-
-            badge.innerText = data.a ? "Statement is TRUE" : "Statement is FALSE";
-            badge.className = `px-2 py-0.5 rounded text-xs font-bold uppercase ${data.a ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700'}`;
-            
-            justification.innerHTML = data.j;
-
-            if (window.MathJax) {
-                MathJax.typesetPromise([justification]);
-            }
-        }
-
-        function nextQuestion() {
-            const quizData = allQuizzes[activeQuizKey];
-            currentQuestion++;
-            if (currentQuestion < quizData.length) {
-                loadQuestion();
-            } else {
-                showResults();
-            }
-        }
-
-        function prevQuestion() {
-            if (currentQuestion > 0) {
-                currentQuestion--;
-                loadQuestion();
-            }
-        }
-
-        function showResults() {
-            const quizData = allQuizzes[activeQuizKey];
-            document.getElementById('progress-fill').style.width = "100%";
-            document.getElementById('question-num').innerText = "Quiz Complete";
-            document.getElementById('question-text').innerHTML = `You scored <span class="text-blue-600 font-bold">${score} out of ${quizData.length}</span>!`;
-            document.getElementById('feedback-area').classList.add('hidden');
-            document.getElementById('next-btn').classList.add('hidden');
-            document.getElementById('prev-btn').classList.add('hidden');
-            document.getElementById('choice-buttons').classList.add('hidden');
-            document.getElementById('restart-btn').classList.remove('hidden');
-        }
-
-        function resetQuiz() {
-            startQuiz(activeQuizKey);
-        }
-
-        window.onload = showMenu;
-    </script>
+    <script src="quiz-data.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
