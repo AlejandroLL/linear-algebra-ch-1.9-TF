@@ -399,5 +399,72 @@ window.QUIZ_SECTIONS = [
         ],
         "badge": "Exercises 25-38",
         "highlight": "emerald"
+    },
+    {
+        "id": "4.3",
+        "title": "Section 4.3: Linearlu independent sets; basis",
+        "questions": [
+            {
+               "q": "A single vector by itself is linearly dependent.",
+               "a": false,
+               "j": "A single vector $\{v\}$ is linearly dependent only if $v = 0$. If $v \\neq 0$, it is linearly independent."
+            },
+            {
+               "q": "A linearly independent set in a subspace $H$ is a basis for $H$.",
+               "a": false,
+               "j": "A basis must also span $H$. A linearly independent set might not be large enough to span the entire subspace."
+            },
+            {
+               "q": "If $H = \\text{Span } \\{b_1, \\dots, b_p\\}$, then $\\{b_1, \\dots, b_p\\}$ is a basis for $H$.",
+               "a": false,
+               "j": "The set must also be linearly independent to be a basis. The Spanning Set Theorem states we may need to remove some vectors."
+            },
+            {
+               "q": "If a finite set $S$ of nonzero vectors spans a vector space $V$, then some subset of $S$ is a basis for $V$.",
+               "a": true,
+               "j": "This is the essence of the Spanning Set Theorem. If a set spans $V$, you can remove linearly dependent vectors until you have a basis."
+            },
+            {
+               "q": "The columns of an invertible $n \\times n$ matrix form a basis for $\\mathbb{R}^n$.",
+               "a": true,
+               "j": "By the Invertible Matrix Theorem, the columns of an invertible matrix are linearly independent and span $\\mathbb{R}^n$."
+            },
+            {
+               "q": "A basis is a linearly independent set that is as large as possible.",
+               "a": true,
+               "j": "A basis is a 'maximal' linearly independent set. If you add any other vector, the set becomes linearly dependent."
+            },
+            {
+               "q": "A basis is a spanning set that is as large as possible.",
+               "a": false,
+               "j": "A basis is a 'minimal' spanning set. If you remove any vector, it will no longer span the space."
+            },
+            {
+               "q": "The standard method for producing a spanning set for $\\text{Nul } A$ sometimes fails to produce a basis for $\\text{Nul } A$.",
+               "a": false,
+               "j": "The method of using free variables to describe the solution set of $Ax = 0$ always produces a linearly independent set that spans $\\text{Nul } A$."
+            },
+            {
+               "q": "In some cases, the linear dependence relations among the columns of a matrix can be affected by certain elementary row operations.",
+               "a": false,
+               "j": "Row operations preserve linear dependence relations among columns. If $x$ is a solution to $Ax=0$, it is also a solution to $Bx=0$ where $B$ is the echelon form."
+            },
+            {
+               "q": "If $B$ is an echelon form of a matrix $A$, then the pivot columns of $B$ form a basis for $\\text{Col } A$.",
+               "a": false,
+               "j": "The pivot columns of the *original matrix A* form a basis for $\\text{Col } A$, not the columns of the echelon form $B$ itself."
+            },
+            {
+               "q": "Row operations preserve the linear dependence relations among the rows of $A$.",
+               "a": true,
+               "j": "Row operations do not change the row space of a matrix; the span of the rows remains identical."
+            },
+            {
+               "q": "If $A$ and $B$ are row equivalent, then their row spaces are the same.",
+               "a": true,
+               "j": "Elementary row operations result in rows that are linear combinations of the original rows, thus the span remains unchanged."
+            }
+        ]
+
     }
 ];
